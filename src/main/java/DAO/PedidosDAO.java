@@ -45,7 +45,7 @@ public class PedidosDAO {
         
         Pedidos pedidos = null;
 
-        String sql = "SELECT tbpedidos.id, tbprodutos.nome, tbprodutospedidos.quantidade, tbprodutospedidos.valorunitario, tbenderecospedidos.rua, tbenderecospedidos.numero, tbenderecospedidos.bairro, tbenderecospedidos.cidade, tbenderecospedidos.uf,tbpedidos.formapagamento FROM tbpedidos\n" +
+        String sql = "SELECT tbpedidos.id, tbprodutos.nome, tbprodutospedidos.quantidade, tbprodutospedidos.valorunitario, tbenderecospedidos.rua, tbenderecospedidos.numero, tbenderecospedidos.bairro, tbenderecospedidos.cidade, tbenderecospedidos.uf,tbpedidos.formapagamento, tbpedidos.valortotal FROM tbpedidos\n" +
 "INNER JOIN tbenderecospedidos ON tbpedidos.enderecopedido = tbenderecospedidos.id\n" +
 "INNER JOIN tbprodutospedidos ON tbpedidos.id = tbprodutospedidos.idpedido\n" +
 "INNER JOIN tbprodutos ON tbprodutos.idprodutos = tbprodutospedidos.produto\n" +
@@ -69,6 +69,7 @@ public class PedidosDAO {
                 pedidos.getEndereco().setCidade(resultado.getString("cidade"));
                 pedidos.getEndereco().setUf(resultado.getString("uf"));
                 pedidos.setFormaPagamento(resultado.getString("formapagamento"));
+                pedidos.setValorTotal(resultado.getFloat("valortotal"));
                 
                 pedidos.getProdutos().add(produto);
                 // Adcionando cada registro encontro, na lista .

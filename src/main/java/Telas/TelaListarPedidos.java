@@ -9,19 +9,24 @@ import DAO.PedidosDAO;
 import Model.Cliente;
 import Model.Email;
 import Model.Pedidos;
+import com.mysql.cj.util.StringUtils;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -33,10 +38,11 @@ public class TelaListarPedidos extends javax.swing.JFrame {
 
     DefaultTableModel model;
     private Cliente cliente;
-    
+    private List<Pedidos> listaDePedidos;
+
     PedidosDAO pedidosDAO = new PedidosDAO();
-    Email email = new Email(); 
-    
+    Email email = new Email();
+
     public TelaListarPedidos(Cliente cliente) {
         this.cliente = cliente;
         initComponents();
@@ -49,18 +55,21 @@ public class TelaListarPedidos extends javax.swing.JFrame {
 
         try {
             list = pedidosDAO.buscaId(idPedido);
+            this.listaDePedidos = list;
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
 
-        for (Pedidos pedidos : list)
-            model.insertRow(model.getRowCount(), new Object[]{pedidos.getId(), pedidos.getProdutos().get(0).getNome(), pedidos.getProdutos().get(0).getQuantidade(), 
-                pedidos.getProdutos().get(0).getValor(), pedidos.getEndereco().getRua(), pedidos.getEndereco().getNumero(), pedidos.getEndereco().getBairro(), 
+        for (Pedidos pedidos : list) {
+            model.insertRow(model.getRowCount(), new Object[]{pedidos.getId(), pedidos.getProdutos().get(0).getNome(), pedidos.getProdutos().get(0).getQuantidade(),
+                pedidos.getProdutos().get(0).getValor(), pedidos.getEndereco().getRua(), pedidos.getEndereco().getNumero(), pedidos.getEndereco().getBairro(),
                 pedidos.getEndereco().getCidade(), pedidos.getEndereco().getUf(), pedidos.getFormaPagamento()});
-        
+        }
+
     }
-    
-    public void sendMailProcess() {
+
+    public void envioEmail() {
+
         // Recipient's email ID needs to be mentioned.        
         String to = email.getEndereco();
 
@@ -76,14 +85,14 @@ public class TelaListarPedidos extends javax.swing.JFrame {
         properties.put("mail.smtp.port", "465");
 
         // Get the Session object.// and pass 
-        javax.mail.Session session = javax.mail.Session.getInstance(properties, new javax.mail.Authenticator() {
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 
             protected PasswordAuthentication getPasswordAuthentication() {
-                //e-Mail: testesautomatizadosndd@gmail.com
-                //Senha: AutomaticNDDNFCe
-                //Senha de APP: ncwrzmozfacjfiro
+                //e-Mail: nextlevelsenac@gmail.com
+                //Senha: ncwrzmozfacjfiro
+                //Senha de APP: xsvatsazvpvottjz
 
-                return new PasswordAuthentication("nextlevelsenac@gmail.com", "ncwrzmozfacjfiro");
+                return new PasswordAuthentication("nextlevelsenac@gmail.com", "xsvatsazvpvottjz");
 
             }
 
@@ -104,37 +113,46 @@ public class TelaListarPedidos extends javax.swing.JFrame {
             message.setSubject("Next Level Store - Seu pedido realizado com sucesso!");
 
             Multipart multipart = new MimeMultipart();
-
-            MimeBodyPart attachmentPart = new MimeBodyPart();
-
+//
+//            MimeBodyPart attachmentPart = new MimeBodyPart();
+//
+            StringBuffer texto = new StringBuffer();
             MimeBodyPart textPart = new MimeBodyPart();
 
 //            try {
-
 //                File f = new File(diretorioSelecionadoEntrada + "Massa_Gerada\\" + "Relatorio\\" + "Relatorio.txt");
 //
 //                attachmentPart.attachFile(f);
-                textPart.setText("Obrigado por comprar conosco. Acompanhe nossas promoções nas redes sociais.");
-                multipart.addBodyPart(textPart);
-                multipart.addBodyPart(attachmentPart);
+            texto.append("<h2 align='center'>Seu pedido está a caminho! O número dele é " + listaDePedidos.get(0).getId() + "</h2>");
+            for (Pedidos pedido : listaDePedidos) {
+                texto.append("Item: " + pedido.getProdutos().get(0).getNome() + " | Quantidade: " + pedido.getProdutos().get(0).getQuantidade() + "<br/>");
+            }
 
+            texto.append("<br/>Forma de pagamento: " + listaDePedidos.get(0).getFormaPagamento() + "<br/>");
+            texto.append("Endereço de entrega: " + listaDePedidos.get(0).getEndereco().EnderecoCompleto() + "<br/>");
+            texto.append("Valor total do pedido: " + listaDePedidos.get(0).getValorTotal() + "<br/>");
+            texto.append("Obrigado por comprar conosco. Acompanhe nossas promoções nas redes sociais. <br/>");
+            textPart.setText(texto.toString(), "UTF-8", "html");
+            multipart.addBodyPart(textPart);
+
+//                multipart.addBodyPart(attachmentPart);
 //            } catch (IOException e) {
 //
 //                e.printStackTrace();
 //
 //            }
-
             message.setContent(multipart);
-
             System.out.println("Enviando e-Mail...");
             // Send message
             Transport.send(message);
             System.out.println("e-Mail enviado com sucesso....");
+            statusEnvioEmail.setText("e-Mail enviado com sucesso");
+            statusEnvioEmail.setForeground(Color.BLACK);
         } catch (MessagingException mex) {
             mex.printStackTrace();
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -151,6 +169,7 @@ public class TelaListarPedidos extends javax.swing.JFrame {
         botaoEnviarEmail = new javax.swing.JButton();
         entraEmailPedido = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        statusEnvioEmail = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -218,13 +237,15 @@ public class TelaListarPedidos extends javax.swing.JFrame {
                         .addComponent(entraIdPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(botaoListarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(entraEmailPedido)
+                        .addComponent(entraEmailPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(botaoEnviarEmail)
-                        .addGap(208, 208, 208)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(statusEnvioEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(botaoVoltarListagemPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -245,8 +266,9 @@ public class TelaListarPedidos extends javax.swing.JFrame {
                     .addComponent(botaoListarPedido)
                     .addComponent(botaoEnviarEmail)
                     .addComponent(entraEmailPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addContainerGap(24, Short.MAX_VALUE))
+                    .addComponent(jLabel2)
+                    .addComponent(statusEnvioEmail))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -271,21 +293,31 @@ public class TelaListarPedidos extends javax.swing.JFrame {
 
     private void botaoListarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoListarPedidoActionPerformed
         Pedidos pedidos = new Pedidos();
-        
+
         String idPedido = (entraIdPedido.getText());
-        
+
         if (idPedido.isEmpty() || idPedido.isBlank()) {
             JOptionPane.showMessageDialog(null, "É necessário informar o IP do Pedido.");
             return;
-        }        
-        
+        }
+
         listar(Integer.parseInt(idPedido));
-        
+
     }//GEN-LAST:event_botaoListarPedidoActionPerformed
 
     private void botaoEnviarEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEnviarEmailActionPerformed
-        email.setEndereco(entraEmailPedido.getText());
-        sendMailProcess();
+        if (listaDePedidos == null || listaDePedidos.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Favor listar o pedido.");
+            return;
+        }
+        if (StringUtils.isEmptyOrWhitespaceOnly(entraEmailPedido.getText())) {
+            JOptionPane.showMessageDialog(null, "Favor informar o e-Mail de destino");
+            return;
+        }
+        statusEnvioEmail.setText("Enviando e-Mail...");
+        email.setEndereco(entraEmailPedido.getText());        
+        envioEmail();
+
     }//GEN-LAST:event_botaoEnviarEmailActionPerformed
 
 
@@ -301,6 +333,7 @@ public class TelaListarPedidos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel statusEnvioEmail;
     private javax.swing.JTable tabelaListagemPedidos;
     // End of variables declaration//GEN-END:variables
 }

@@ -21,6 +21,15 @@ public class TelaCadastroClientes extends javax.swing.JFrame {
     public TelaCadastroClientes(Cliente cliente) {
         this.cliente = cliente;
         initComponents();
+        
+        cliente.setNome(entraNomeCadastroCliente.getText());
+        cliente.setDataNascimento(entraDataNascimentoCadastroCliente.getText());
+        cliente.setEmail(entraEmailCadastroCliente.getText());
+        cliente.setCpf(entraCpfCadastroCliente.getText());
+        cliente.setSenha(entraSenhaCadastroCliente.getText());
+        cliente.setConfirmaSenha(entraSenhaConfirmacaoCadastroCliente.getText());
+        
+        botaoCadastroCliente.setText("Gravar");
     }
 
     @SuppressWarnings("unchecked")

@@ -101,4 +101,31 @@ public class ClientesDAO {
         return listarClientes;
 
     }
+    
+    public Cliente buscarClienteId(int id) throws Exception {
+        Cliente cliente = null;
+
+        String sql = "SELECT * FROM nextlevel.tbclientes where id=?;";        
+
+        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultado = preparedStatement.executeQuery();
+
+            while (resultado.next()) {
+                cliente = new Cliente();
+                cliente.setId(resultado.getInt("id"));
+                cliente.setNome(resultado.getString("nome"));
+                cliente.setDataNascimento(resultado.getString("datadenascimento"));
+                cliente.setEmail(resultado.getString("email"));
+                cliente.setCpf(resultado.getString("cpf"));
+                cliente.setSenha(resultado.getString("senha"));
+            }
+
+            return cliente;
+
+        } catch (SQLException e) {
+            throw new Exception("Não foi possível listar os clientes.");
+        }
+
+    } 
 }

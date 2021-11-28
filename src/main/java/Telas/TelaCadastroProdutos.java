@@ -223,7 +223,19 @@ public class TelaCadastroProdutos extends javax.swing.JFrame {
         telaMenuPrincipal.setVisible(true);
     }//GEN-LAST:event_botaoCancelarCadastroProdutoActionPerformed
 
+    void limparTela() {
+        entraNomeCadastroProduto.setText("");
+        entraNomeCadastroProduto.setBackground(Color.white);
+        entraValorCadastroProduto.setText("");
+        entraDescricaoCadastroProduto.setText("");
+        entraDescricaoCadastroProduto.setBackground(Color.white);
+        entraPesoCadastroProduto.setText("");
+        entraQuantidadeCadastroProduto.setText("");
+        comboCategoriaCadastroProduto.setSelectedIndex(0);
+    }
+
     private void botaoCadastroProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastroProdutoActionPerformed
+        
         produtos.setNome(entraNomeCadastroProduto.getText());
         produtos.setValor(entraValorCadastroProduto.getText());
         produtos.setDescricao(entraDescricaoCadastroProduto.getText());
@@ -248,17 +260,15 @@ public class TelaCadastroProdutos extends javax.swing.JFrame {
                     }
                 } else {
                     produtosDAO.editarProduto(produtos);
-                    JOptionPane.showMessageDialog(null, "O produto foi alterado com sucesso.");
+                    limparTela();
+                    JOptionPane.showMessageDialog(null, "O produto foi alterado com sucesso.");                    
+                    
+                    this.dispose();
+                    TelaListarProdutos telaListarProdutos = new TelaListarProdutos(cliente);
+                    telaListarProdutos.setVisible(true);
                 }
 
-                entraNomeCadastroProduto.setText("");
-                entraNomeCadastroProduto.setBackground(Color.white);
-                entraValorCadastroProduto.setText("");
-                entraDescricaoCadastroProduto.setText("");
-                entraDescricaoCadastroProduto.setBackground(Color.white);
-                entraPesoCadastroProduto.setText("");
-                entraQuantidadeCadastroProduto.setText("");
-                comboCategoriaCadastroProduto.setSelectedIndex(0);
+                limparTela();
 
             } catch (Exception ex) {
                 Logger.getLogger(TelaCadastroProdutos.class.getName()).log(Level.SEVERE, null, ex);

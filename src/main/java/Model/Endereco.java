@@ -57,5 +57,9 @@ public class Endereco {
         this.id = id;
     }
     
+    public String EnderecoCompleto(){
+        return rua + ", " + numero + ", " + bairro + ", " + cidade + ", " + uf;
+    }
+    
     
 }

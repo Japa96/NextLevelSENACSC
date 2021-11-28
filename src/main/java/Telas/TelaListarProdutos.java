@@ -205,7 +205,7 @@ public class TelaListarProdutos extends javax.swing.JFrame {
             TelaCadastroProdutos telaCadastroProduto = new TelaCadastroProdutos(cliente, produto);
             telaCadastroProduto.setVisible(true);
         } catch (ArrayIndexOutOfBoundsException ex) {
-            JOptionPane.showMessageDialog(null, "Selecione um produto a ser deletado.");
+            JOptionPane.showMessageDialog(null, "Selecione um produto a ser editado.");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }

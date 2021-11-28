@@ -42,7 +42,7 @@ public class TelaListarClientes extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaListagemClientes = new javax.swing.JTable();
         jSeparator2 = new javax.swing.JSeparator();
-        botaoGravarListagemClientes = new javax.swing.JButton();
+        botaoEditarListagemClientes = new javax.swing.JButton();
         botaoVoltarListagemClientes = new javax.swing.JButton();
         botaoListarClientes = new javax.swing.JButton();
 
@@ -62,7 +62,12 @@ public class TelaListarClientes extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tabelaListagemClientes);
 
-        botaoGravarListagemClientes.setText("Gravar");
+        botaoEditarListagemClientes.setText("Editar");
+        botaoEditarListagemClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoEditarListagemClientesActionPerformed(evt);
+            }
+        });
 
         botaoVoltarListagemClientes.setText("Voltar");
         botaoVoltarListagemClientes.addActionListener(new java.awt.event.ActionListener() {
@@ -94,7 +99,7 @@ public class TelaListarClientes extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(botaoVoltarListagemClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(botaoGravarListagemClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(botaoEditarListagemClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jInternalFrame1Layout.setVerticalGroup(
@@ -108,7 +113,7 @@ public class TelaListarClientes extends javax.swing.JFrame {
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(botaoGravarListagemClientes)
+                    .addComponent(botaoEditarListagemClientes)
                     .addComponent(botaoVoltarListagemClientes)
                     .addComponent(botaoListarClientes))
                 .addContainerGap(15, Short.MAX_VALUE))
@@ -154,9 +159,24 @@ public class TelaListarClientes extends javax.swing.JFrame {
         listarClientes();
     }//GEN-LAST:event_botaoListarClientesActionPerformed
 
+    private void botaoEditarListagemClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarListagemClientesActionPerformed
+        try {
+            int SelecionaId = (int) tabelaListagemClientes.getModel().getValueAt(tabelaListagemClientes.getSelectedRow(), 0);
+            Cliente cliente = clientesDAO.buscarClienteId(SelecionaId);
+
+            this.dispose();
+            TelaCadastroClientes telaCadastroClientes = new TelaCadastroClientes(cliente);
+            telaCadastroClientes.setVisible(true);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            JOptionPane.showMessageDialog(null, "Selecione um cliente a ser editado.");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_botaoEditarListagemClientesActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botaoGravarListagemClientes;
+    private javax.swing.JButton botaoEditarListagemClientes;
     private javax.swing.JButton botaoListarClientes;
     private javax.swing.JButton botaoVoltarListagemClientes;
     private javax.swing.JInternalFrame jInternalFrame1;
