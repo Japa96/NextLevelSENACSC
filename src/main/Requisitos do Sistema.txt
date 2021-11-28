@@ -1,0 +1,5 @@
+A NEXTLEVEL decidiu expandir suas vendas, atualmente está atendendo apenas em seu endereço físico. Mas com a pandemia as vendas caíram bastante e assim surgiu a necessidade de expandir suas vendas para o todo Brasil.
+
+A loja trabalha com venda de produtos gamer como monitor, teclado, mouse, mousepad entre outros diversos tipos. Como a venda será online deve-se realizar o cadastro de cliente (Nome, Email, Senha, CPF, DataNascimento). Os produtos também precisam ser cadastrados na plataforma com os seguintes atributos (Nome, Descrição, Valor, Peso, Quantidade). Os produtos são organizados por categorias. O usuário deve cadastrar o EndereçoEntrega (CEP, Rua, Cidade, Estado).
+
+Quando um cliente escolhe o produto que deseja comprar é gerado um Pedido que vai conter o (nome do produto, quantidade, valorUnitário, EndereçoEntrega), também é necessário escolher a forma de pagamento (cartão, pix, débito...)

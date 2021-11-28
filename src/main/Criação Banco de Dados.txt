@@ -1,0 +1,67 @@
+---******************************************---
+
+Criação da estrutura do Banco para o trabalho de Integração NextLevel
+
+---******************************************---
+
+***Criação do banco***
+
+CREATE DATABASE nextlevel;
+
+------------------------------------------------
+
+***Criação da Tabela de Clientes***
+
+CREATE TABLE `nextlevel`.`tbclientes` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(50) NOT NULL,
+  `datadenascimento` DATE NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `cpf` VARCHAR(12) NOT NULL ,
+  `senha` VARCHAR(255) NULL,
+  PRIMARY KEY (`idclientes`));
+
+
+INSERT INTO nextlevel.tbclientes (id, nome, datadenascimento, email, cpf, senha) 
+VALUES (null, 'admin', '1900-01-01', 'admin@admin.com.br', '00000000000', 'admin');
+
+------------------------------------------------
+
+**Criação da Tabela Produtos***
+
+CREATE TABLE `nextlevel`.`tbprodutos` (
+  `idprodutos` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `valor` VARCHAR(50) NOT NULL ,
+  `descricao` VARCHAR(255) NOT NULL,
+  `peso` VARCHAR(50) NOT NULL ,
+  `quantidade` DOUBLE NOT NULL,
+  `categoria` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`idprodutos`));
+
+
+------------------------------------------------
+
+**Criação da Tabela Pedidos***
+
+CREATE TABLE `nextlevel`.`tbpedidos` (
+  `idpedido` INT NOT NULL AUTO_INCREMENT,
+  `produto` INT NOT NULL,
+  `quantidade` INT NOT NULL,
+  `formapagamento` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idpedido`));
+
+ALTER TABLE `tbpedidos` ADD CONSTRAINT `fk_produtos` FOREIGN KEY ( `produto` ) REFERENCES `tbprodutos` ( `idprodutos` ) ;
+
+------------------------------------------------
+
+**Criação da Tabela Endereço do Pedido***
+
+CREATE TABLE `nextlevel`.`tbenderecopedido` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `rua` VARCHAR(100) NOT NULL,
+  `numero` INT(11) NOT NULL,
+  `bairro` VARCHAR(45) NOT NULL,
+  `cidade` VARCHAR(50) NOT NULL,
+  `uf` VARCHAR(4) NOT NULL,
+  PRIMARY KEY (`id`));
