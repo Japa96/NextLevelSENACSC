@@ -5,8 +5,8 @@
  */
 package Telas;
 
-import DAO.LoginDAO;
 import Model.Cliente;
+import Services.ClienteServiceImplements;
 import java.util.Optional;
 import javax.swing.JOptionPane;
 
@@ -16,7 +16,8 @@ import javax.swing.JOptionPane;
  */
 public class TelaLogin extends javax.swing.JFrame {
 
-    private Cliente clientes = new Cliente();
+    private Cliente cliente = new Cliente();
+    private ClienteServiceImplements clienteService = new ClienteServiceImplements();
 
     public TelaLogin() {
         initComponents();
@@ -150,13 +151,12 @@ public class TelaLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BotaoEntrarLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoEntrarLoginActionPerformed
-        clientes.setEmail(entraEmailLogin.getText());
-        clientes.setSenha(entraSenhaLogin.getText());
+        cliente.setEmail(entraEmailLogin.getText());
+        cliente.setSenha(entraSenhaLogin.getText());
 
-        if (clientes.validaEmail() == true) {
+        if (cliente.validaEmail() == true) {
             try {
-                LoginDAO loginDAO = new LoginDAO();
-                Optional<Cliente> validaClientes = loginDAO.validaLogin(clientes);
+                Optional<Cliente> validaClientes = clienteService.validaLogin(cliente);
 
                 if (validaClientes.isPresent()) {
                     this.dispose();
