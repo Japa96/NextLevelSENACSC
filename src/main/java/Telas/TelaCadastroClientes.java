@@ -14,6 +14,8 @@ public class TelaCadastroClientes extends javax.swing.JFrame {
 
     private Cliente cliente;
 
+    private Cliente cadastroCliente;
+
     public TelaCadastroClientes() {
         initComponents();
     }
@@ -21,15 +23,6 @@ public class TelaCadastroClientes extends javax.swing.JFrame {
     public TelaCadastroClientes(Cliente cliente) {
         this.cliente = cliente;
         initComponents();
-        
-        cliente.setNome(entraNomeCadastroCliente.getText());
-        cliente.setDataNascimento(entraDataNascimentoCadastroCliente.getText());
-        cliente.setEmail(entraEmailCadastroCliente.getText());
-        cliente.setCpf(entraCpfCadastroCliente.getText());
-        cliente.setSenha(entraSenhaCadastroCliente.getText());
-        cliente.setConfirmaSenha(entraSenhaConfirmacaoCadastroCliente.getText());
-        
-        botaoCadastroCliente.setText("Gravar");
     }
 
     @SuppressWarnings("unchecked")
@@ -198,8 +191,22 @@ public class TelaCadastroClientes extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    void limparCampos() {
+        entraNomeCadastroCliente.setText("");
+        entraDataNascimentoCadastroCliente.setText("");
+        entraEmailCadastroCliente.setText("");
+        entraEmailCadastroCliente.setBackground(Color.white);
+
+        entraCpfCadastroCliente.setText("");
+        entraSenhaCadastroCliente.setText("");
+        entraSenhaConfirmacaoCadastroCliente.setText("");
+        entraCpfCadastroCliente.setBackground(Color.white);
+        entraSenhaCadastroCliente.setBackground(Color.white);
+        entraSenhaConfirmacaoCadastroCliente.setBackground(Color.white);
+    }
+
     private void botaoCancelarCadastroClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarCadastroClienteActionPerformed
-        System.out.println(cliente);
+
         if (cliente != null) {
             this.dispose();
             TelaMenuPrincipal telaMenuPrincipal = new TelaMenuPrincipal(cliente);
@@ -212,29 +219,26 @@ public class TelaCadastroClientes extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoCancelarCadastroClienteActionPerformed
 
     private void botaoLimparCadastroClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLimparCadastroClienteActionPerformed
-        entraNomeCadastroCliente.setText("");
-        entraDataNascimentoCadastroCliente.setText("");
-        entraEmailCadastroCliente.setText("");
-        entraCpfCadastroCliente.setText("");
-        entraSenhaCadastroCliente.setText("");
-        entraSenhaConfirmacaoCadastroCliente.setText("");
+        limparCampos();
     }//GEN-LAST:event_botaoLimparCadastroClienteActionPerformed
 
     private void botaoCadastroClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastroClienteActionPerformed
 
-        cliente.setNome(entraNomeCadastroCliente.getText());
-        cliente.setDataNascimento(entraDataNascimentoCadastroCliente.getText());
-        cliente.setEmail(entraEmailCadastroCliente.getText());
-        cliente.setCpf(entraCpfCadastroCliente.getText());
-        cliente.setSenha(entraSenhaCadastroCliente.getText());
-        cliente.setConfirmaSenha(entraSenhaConfirmacaoCadastroCliente.getText());
+        this.cadastroCliente = new Cliente();
 
-        if (cliente.validaEmail() == true && cliente.validaSenha() == true && cliente.validaCPF() == true) {
+        cadastroCliente.setNome(entraNomeCadastroCliente.getText());
+        cadastroCliente.setDataNascimento(entraDataNascimentoCadastroCliente.getText());
+        cadastroCliente.setEmail(entraEmailCadastroCliente.getText());
+        cadastroCliente.setCpf(entraCpfCadastroCliente.getText());
+        cadastroCliente.setSenha(entraSenhaCadastroCliente.getText());
+        cadastroCliente.setConfirmaSenha(entraSenhaConfirmacaoCadastroCliente.getText());
+
+        if (cadastroCliente.validaEmail() == true && cadastroCliente.validaSenha() == true && cadastroCliente.validaCPF() == true) {
             ClientesDAO clientesDao = new ClientesDAO();
 
             try {
-                boolean retornaChecaCliente = clientesDao.checaCliente(cliente);
-                boolean retornaChecaCpf = clientesDao.checaCpfCliente(cliente);
+                boolean retornaChecaCliente = clientesDao.checaCliente(cadastroCliente);
+                boolean retornaChecaCpf = clientesDao.checaCpfCliente(cadastroCliente);
 
                 if (retornaChecaCliente == true) {
                     JOptionPane.showMessageDialog(null, "O e-Mail informado já está cadastrado.");
@@ -246,29 +250,21 @@ public class TelaCadastroClientes extends javax.swing.JFrame {
                     entraCpfCadastroCliente.setText("");
                     entraCpfCadastroCliente.setBackground(Color.red);
                 } else {
-                    clientesDao.cadastro(cliente);
+                    clientesDao.cadastro(cadastroCliente);
                     JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso.");
 
-                    entraNomeCadastroCliente.setText("");
-                    entraDataNascimentoCadastroCliente.setText("");
-                    entraEmailCadastroCliente.setText("");
-                    entraEmailCadastroCliente.setBackground(Color.white);
-
-                    entraCpfCadastroCliente.setText("");
-                    entraSenhaCadastroCliente.setText("");
-                    entraSenhaConfirmacaoCadastroCliente.setText("");
-                    entraCpfCadastroCliente.setBackground(Color.white);
-                    entraSenhaCadastroCliente.setBackground(Color.white);
-                    entraSenhaConfirmacaoCadastroCliente.setBackground(Color.white);
+                    limparCampos();
 
                     int desejoCadastro = JOptionPane.showConfirmDialog(null, "Deseja cadastrar mais algum cliente?");
-
+                    
                     if (desejoCadastro == 1) {
+                        
                         if (cliente != null) {
                             this.dispose();
                             TelaMenuPrincipal telaMenuPrincipal = new TelaMenuPrincipal(cliente);
+                            System.out.println(cliente.getNome());
                             telaMenuPrincipal.setVisible(true);
-                        } else {
+                        } else{
                             this.dispose();
                             TelaLogin telaLogin = new TelaLogin();
                             telaLogin.setVisible(true);
@@ -280,19 +276,19 @@ public class TelaCadastroClientes extends javax.swing.JFrame {
                 Logger.getLogger(TelaCadastroClientes.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        if (cliente.validaEmail() == false) {
+        if (cadastroCliente.validaEmail() == false) {
             JOptionPane.showMessageDialog(null, "O e-Mail informado é inválido.");
             entraEmailCadastroCliente.setText("");
             entraEmailCadastroCliente.setBackground(Color.red);
         }
-        if (cliente.validaSenha() == false) {
+        if (cadastroCliente.validaSenha() == false) {
             JOptionPane.showMessageDialog(null, "A senhas não são iguais.");
             entraSenhaCadastroCliente.setText("");
             entraSenhaConfirmacaoCadastroCliente.setText("");
             entraSenhaCadastroCliente.setBackground(Color.red);
             entraSenhaConfirmacaoCadastroCliente.setBackground(Color.red);
         }
-        if (cliente.validaCPF() == false) {
+        if (cadastroCliente.validaCPF() == false) {
             JOptionPane.showMessageDialog(null, "O CPF informado é inválido");
             entraCpfCadastroCliente.setText("");
             entraCpfCadastroCliente.setBackground(Color.red);
