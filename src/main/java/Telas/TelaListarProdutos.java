@@ -9,6 +9,8 @@ import DAO.ProdutosDAO;
 import Model.Cliente;
 import Model.Produtos;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -74,6 +76,7 @@ public class TelaListarProdutos extends javax.swing.JFrame {
         comboSelecionaCategoria = new javax.swing.JComboBox<>();
         botaoListarCategoria = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        botaoLDeletarProduto = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -124,6 +127,13 @@ public class TelaListarProdutos extends javax.swing.JFrame {
 
         jLabel1.setText("Categoria");
 
+        botaoLDeletarProduto.setText("Deletar");
+        botaoLDeletarProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoLDeletarProdutoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
         jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
         jInternalFrame1Layout.setHorizontalGroup(
@@ -141,6 +151,8 @@ public class TelaListarProdutos extends javax.swing.JFrame {
                         .addComponent(comboSelecionaCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(botaoListarCategoria)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(botaoLDeletarProduto)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(botaoVoltarListagemProdutos, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -162,8 +174,9 @@ public class TelaListarProdutos extends javax.swing.JFrame {
                     .addComponent(botaoVoltarListagemProdutos)
                     .addComponent(comboSelecionaCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botaoListarCategoria)
-                    .addComponent(jLabel1))
-                .addContainerGap(25, Short.MAX_VALUE))
+                    .addComponent(jLabel1)
+                    .addComponent(botaoLDeletarProduto))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -211,9 +224,37 @@ public class TelaListarProdutos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_botaoEditarListagemProdutosActionPerformed
 
+    private void botaoLDeletarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLDeletarProdutoActionPerformed
+
+        int SelecionaId = (int) tabelaListagemProdutos.getModel().getValueAt(tabelaListagemProdutos.getSelectedRow(), 0);
+        try {
+            Produtos produto = produtosDAO.checaProdutoPedidos(SelecionaId);
+
+            if (produto != null) {
+                JOptionPane.showMessageDialog(null, "Não é possível excluir o produto: ID " + produto.getId() + " pois o mesmo está vinculado a um pedido!");
+            } else {
+                produtosDAO.deletarProdutos(SelecionaId);
+                JOptionPane.showMessageDialog(null, "Produto excluido com sucesso.");
+
+                String tipoSelecionaCategoria = (String) comboSelecionaCategoria.getSelectedItem();
+                boolean categoriaSelecionada = tipoSelecionaCategoria.equals("Todos");
+                if (categoriaSelecionada == true) {
+                    listarProdutos();
+                } else {
+                    listarProdutosCategoria();
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            JOptionPane.showMessageDialog(null, "Selecione um produto a ser deletado.");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_botaoLDeletarProdutoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoEditarListagemProdutos;
+    private javax.swing.JButton botaoLDeletarProduto;
     private javax.swing.JButton botaoListarCategoria;
     private javax.swing.JButton botaoVoltarListagemProdutos;
     private javax.swing.JComboBox<String> comboSelecionaCategoria;

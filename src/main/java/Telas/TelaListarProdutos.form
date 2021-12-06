@@ -58,6 +58,8 @@
                           <Component id="comboSelecionaCategoria" min="-2" pref="155" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="botaoListarCategoria" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="botaoLDeletarProduto" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="botaoVoltarListagemProdutos" min="-2" pref="73" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -84,8 +86,9 @@
                       <Component id="comboSelecionaCategoria" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="botaoListarCategoria" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="botaoLDeletarProduto" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="25" max="32767" attributes="0"/>
+                  <EmptySpace pref="29" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -209,6 +212,14 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Categoria"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="botaoLDeletarProduto">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Deletar"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoLDeletarProdutoActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

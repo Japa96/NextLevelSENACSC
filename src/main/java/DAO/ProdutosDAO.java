@@ -66,7 +66,7 @@ public class ProdutosDAO {
         return listarProdutos;
 
     }
-    
+
     public List<Produtos> buscarProdutosCategoria(String categoria) throws Exception {
         List<Produtos> listarProdutosCategoria = new ArrayList<>();
 
@@ -101,12 +101,11 @@ public class ProdutosDAO {
         return listarProdutosCategoria;
 
     }
-    
-    
+
     public Produtos buscarProdutosId(int id) throws Exception {
         Produtos produto = null;
 
-        String sql = "SELECT * FROM nextlevel.tbprodutos where idprodutos=?;";        
+        String sql = "SELECT * FROM nextlevel.tbprodutos where idprodutos=?;";
 
         try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
@@ -129,14 +128,14 @@ public class ProdutosDAO {
             throw new Exception("Não foi possível listar os produtos.");
         }
 
-    }    
-    
+    }
+
     public void alteraQuantidadeProduto(Produtos produtos, int novaQuantidade) throws SQLException, Exception {
 
         String sql = "UPDATE nextlevel.tbprodutos SET quantidade=? WHERE idprodutos=?";
 
         try (PreparedStatement preparestatement = con.prepareStatement(sql)) {
-            
+
             preparestatement.setInt(1, novaQuantidade);
             preparestatement.setInt(2, produtos.getId());
 
@@ -146,13 +145,13 @@ public class ProdutosDAO {
             throw new Exception("Não foi possível alterar o produto.");
         }
     }
-    
-    public void editarProduto (Produtos produtos) throws SQLException, Exception {
-        
+
+    public void editarProduto(Produtos produtos) throws SQLException, Exception {
+
         String sql = "UPDATE nextlevel.tbprodutos SET nome=?, valor=?, descricao=?, peso=?, quantidade=?, categoria=? WHERE idprodutos=?";
-        
-        try (PreparedStatement preparestatement = con.prepareStatement(sql)){
-            
+
+        try (PreparedStatement preparestatement = con.prepareStatement(sql)) {
+
             preparestatement.setString(1, produtos.getNome());
             preparestatement.setString(2, produtos.getValor());
             preparestatement.setString(3, produtos.getDescricao());
@@ -165,6 +164,45 @@ public class ProdutosDAO {
             preparestatement.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Falha ao realizar a edição do produto.");
+        }
+    }
+
+    public Produtos checaProdutoPedidos(int id) throws SQLException, Exception {
+
+        Produtos produto = null;
+
+        String sql = "SELECT * FROM nextlevel.tbprodutospedidos where produto = ?;";
+
+        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultado = preparedStatement.executeQuery();
+
+            while (resultado.next()) {
+                produto = new Produtos();
+                produto.setId(resultado.getInt("produto"));
+                produto.setValor(resultado.getString("valorunitario"));
+                produto.setQuantidade(resultado.getInt("quantidade"));
+
+            }
+
+            return produto;
+
+        } catch (SQLException e) {
+            throw new Exception("Não foi possível listar os produtos.");
+        }
+
+    }
+    
+    public void deletarProdutos(int id) throws Exception {
+
+        String sql = "delete FROM nextlevel.tbprodutos where idprodutos = ?";
+
+        try (PreparedStatement preparestatement = con.prepareStatement(sql)) {
+            preparestatement.setInt(1, id);
+            preparestatement.execute();
+            preparestatement.close();
+        } catch (SQLException e) {
+            throw new Exception("Não foi possível excluir o produto selecionado.");
         }
     }
 
