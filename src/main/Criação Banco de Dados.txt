@@ -65,3 +65,24 @@ CREATE TABLE `nextlevel`.`tbenderecopedido` (
   `cidade` VARCHAR(50) NOT NULL,
   `uf` VARCHAR(4) NOT NULL,
   PRIMARY KEY (`id`));
+
+
+**Criação da Tabela Produtos Pedidos***
+
+
+CREATE TABLE `nextlevel`.`tbprodutospedidos` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `produto` INT NOT NULL,
+  `valorunitario` VARCHAR(50) NOT NULL,
+  `quantidade` INT NOT NULL,
+  `idpedido` INT NOT NULL,
+  PRIMARY KEY (`id`));
+
+
+ALTER TABLE `nextlevel`.`tbprodutospedidos` 
+ADD CONSTRAINT `idpedido`
+  FOREIGN KEY (`id`)
+  REFERENCES `nextlevel`.`tbpedidos` (`idpedido`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
